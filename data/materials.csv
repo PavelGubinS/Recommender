@@ -1,0 +1,11 @@
+id	title	description	category	tags
+1	"""Введение в Python"""	"""Основы языка Python"""	Programming	"""python,basics"""
+2	"""Машинное обучение с scikit-learn"""	"""Описание методов ML"""	ML	"""ml,scikit"""
+3	"""Обработка текста в NLP"""	"""Работа с текстом"""	NLP	"""nlp,text"""
+4	"""Анализ данных с Pandas"""	"""Инструменты для анализа данных"""	Data	"""pandas,data-analysis"""
+5	"""Визуализация данных"""	"""Графики и диаграммы"""	Data	"""matplotlib,visualization"""
+6	"""Основы Deep Learning"""	"""Нейронные сети"""	ML	"""deep-learning,neural-networks"""
+7	"""Рекомендательные системы"""	"""Системы рекомендаций"""	ML	"""recommendation-systems"""
+8	"""Python для Data Science"""	"""Инструменты для анализа данных"""	Programming	"""python,data-science"""
+9	"""Программирование на C++"""	"""Основы языка C++"""	Programming	"""c++,programming"""
+10	"""Анализ временных рядов"""	"""Методы прогнозирования"""	Data	"""time-series,forecasting"""
