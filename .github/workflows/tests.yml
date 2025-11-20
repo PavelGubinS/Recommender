@@ -1,16 +1,30 @@
 name: Tests
 on: [push, pull_request]
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - run: black src/  # Автоматически исправим файлы
-      - run: black --check src/  # Проверка соответствия стилю Black
-      - run: pip install -r requirements.txt
-      - run: pytest tests/ -v
-      - run: flake8 src/
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install black flake8 pytest
+
+      - name: Format code with Black
+        run: black src/
+
+      - name: Check code style with Black
+        run: black --check src/
+
+      - name: Run tests with pytest
+        run: pytest tests/ -v
+
+      - name: Check code style with flake8
+        run: flake8 src/
