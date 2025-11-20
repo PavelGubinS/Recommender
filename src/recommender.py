@@ -20,7 +20,14 @@ class StudyRecommender:
             data_path (str): Путь к CSV файлу с материалами
         """
         # Читаем CSV с явным указанием кодировки
-        self.data = pd.read_csv(data_path, encoding='utf-8')
+        try:
+            self.data = pd.read_csv(data_path, encoding='utf-8')
+        except UnicodeDecodeError:
+            # Если utf-8 не работает, пробуем другие кодировки
+            try:
+                self.data = pd.read_csv(data_path, encoding='cp1251')
+            except UnicodeDecodeError:
+                self.data = pd.read_csv(data_path, encoding='latin1')
         
         # Создаем комбинированный текст для векторизации
         self.data['combined_text'] = (
