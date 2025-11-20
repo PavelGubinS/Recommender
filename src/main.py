@@ -4,6 +4,7 @@ Recommender
 
 from recommender import StudyRecommender
 
+
 def main():
     print("=== Study Recommender System ===")
 
@@ -27,6 +28,7 @@ def main():
     data_materials = recommender.search_by_tag("data")
     for material in data_materials:
         print(f"   - {material['title']}")
+
 
 if __name__ == "__main__":
     main()
