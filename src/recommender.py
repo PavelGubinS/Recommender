@@ -97,9 +97,10 @@ class StudyRecommender:
             token_pattern=r'\b\w+\b'
         )
 
-        # Создаем TF-IDF матрицу
-        if len(self.data) > 0:
-            self.tfidf_matrix = self.vectorizer.fit_transform(self.data['combined_text'])
+        # Разбиваем на переменную для читаемости
+        texts = self.data['combined_text']
+        # Создаем TF-IDF матрицу, избегая длинной строки
+        self.tfidf_matrix = self.vectorizer.fit_transform(texts)
 
         print(f"✅ Инициализированен с {len(self.data)} материалами")
 
