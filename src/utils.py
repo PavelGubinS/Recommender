@@ -80,7 +80,7 @@ def print_results(results: pd.DataFrame, query: str):
     print(f"\n📚 Рекомендуемые материалы по запросу '{query}':")
     print("-" * 60)
 
-    for index, row in results.iterrows():
+    for _, row in results.iterrows():
         print(f"ID: {row['id']}")
         print(f"Название: {row['title']}")
         print(f"Описание: {row['description']}")

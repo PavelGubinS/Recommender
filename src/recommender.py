@@ -97,18 +97,19 @@ class StudyRecommender:
             token_pattern=r'\b\w+\b'
         )
 
-        # Разбиваем на переменную для читаемости
+        # Векторизация текста
         texts = self.data['combined_text']
-        # Создаем TF-IDF матрицу, избегая длинной строки
         self.tfidf_matrix = self.vectorizer.fit_transform(texts)
 
-        print(f"✅ Инициализированен с {len(self.data)} материалами")
+        print(f"✅ Инициализирован с {len(self.data)} материалами")
 
     def _create_combined_text(self):
         """Объединяет поля для векторизации"""
-        return (self.data['title'].fillna('') + ' ' +
-                self.data['description'].fillna('') + ' ' +
-                self.data['tags'].fillna(''))
+        return (
+            self.data['title'].fillna('') + ' ' +
+            self.data['description'].fillna('') + ' ' +
+            self.data['tags'].fillna('')
+        )
 
     def recommend(self, query, top_n=3):
         """Рекомендует материалы по запросу"""
@@ -136,13 +137,15 @@ class StudyRecommender:
     def search_by_category(self, category):
         """Поиск материалов по категории"""
         category_mask = self.data['category'].str.contains(
-            category, case=False, na=False)
+            category, case=False, na=False
+        )
         return self.data[category_mask].to_dict('records')
 
     def search_by_tag(self, tag):
         """Поиск материалов по тегу"""
         tags_mask = self.data['tags'].str.contains(
-            tag, case=False, na=False)
+            tag, case=False, na=False
+        )
         return self.data[tags_mask].to_dict('records')
 
     def get_all_materials(self):
