@@ -8,6 +8,14 @@
 study-recommender/
 ├── .gitignore
 
+├── .github/
+
+│   └── workflows/      # yml
+
+│       └── tests.yml
+
+│       └── report-gen.yml       
+
 ├── README.md
 
 ├── requirements.txt
