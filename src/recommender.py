@@ -1,5 +1,5 @@
 """
-Recommender System
+Recommender
 """
 
 import pandas as pd
@@ -87,11 +87,7 @@ class StudyRecommender:
         self.data = pd.DataFrame(self.materials_data)
 
         # Создаем combined_text для векторизации
-        self.data['combined_text'] = (
-            self.data['title'].fillna('') + ' ' +
-            self.data['description'].fillna('') + ' ' +
-            self.data['tags'].fillna('')
-        )
+        self.data['combined_text'] = self._create_combined_text()
 
         # Инициализируем векторизатор
         self.vectorizer = TfidfVectorizer(
@@ -106,6 +102,12 @@ class StudyRecommender:
             self.tfidf_matrix = self.vectorizer.fit_transform(self.data['combined_text'])
 
         print(f"✅ Инициализирована система рекомендаций с {len(self.data)} материалами")
+
+    def _create_combined_text(self):
+        """Создает объединенный текст для векторизации"""
+        return (self.data['title'].fillna('') + ' ' +
+                self.data['description'].fillna('') + ' ' +
+                self.data['tags'].fillna(''))
 
     def recommend(self, query, top_n=3):
         """Рекомендует материалы по запросу"""
