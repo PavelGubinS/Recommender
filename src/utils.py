@@ -3,8 +3,7 @@ Recommender - Вспомогательные функции
 """
 
 import pandas as pd
-import numpy as np
-from typing import List, Dict
+
 
 def load_materials(data_path: str) -> pd.DataFrame:
     """
@@ -22,6 +21,7 @@ def load_materials(data_path: str) -> pd.DataFrame:
         print(f"Ошибка загрузки данных: {e}")
         return pd.DataFrame()
 
+
 def validate_query(query: str) -> bool:
     """
     Проверяет корректность запроса
@@ -38,7 +38,8 @@ def validate_query(query: str) -> bool:
         return False
     return True
 
-def format_results(results: pd.DataFrame) -> List[Dict]:
+
+def format_results(results: pd.DataFrame) -> list:
     """
     Форматирует результаты для вывода
     
@@ -63,6 +64,7 @@ def format_results(results: pd.DataFrame) -> List[Dict]:
         })
     
     return formatted
+
 
 def print_results(results: pd.DataFrame, query: str):
     """

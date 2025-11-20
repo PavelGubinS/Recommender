@@ -5,7 +5,7 @@ Recommender
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
+
 
 class StudyRecommender:
     def __init__(self):
@@ -148,6 +148,7 @@ class StudyRecommender:
     def get_all_materials(self):
         """Возвращает все материалы"""
         return self.data.to_dict('records')
+
 
 # Пример использования
 if __name__ == "__main__":
