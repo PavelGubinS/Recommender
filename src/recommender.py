@@ -139,4 +139,17 @@ class StudyRecommender:
         )
         return self.data[tags_mask].to_dict("records")
 
-    def get_al
+    def get_all_materials(self):
+        return self.data.to_dict("records")
+
+
+if __name__ == "__main__":
+    recommender = StudyRecommender()
+    print("\nРекомендации по запросу 'python prog':")
+    recs = recommender.recommend("python programming", 3)
+    for rec in recs:
+        print(f"  {rec['title']} - {rec['similarity']:.2f}")
+    print("\nМатериалы по 'ML':")
+    ml_list = recommender.search_by_category("ML")
+    for m in ml_list:
+        print(f"  {m['title']}")
