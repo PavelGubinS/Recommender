@@ -23,10 +23,10 @@ def main():
     
     # Примеры запросов для демонстрации
     examples = [
-        "Python для начинающих",
-        "Машинное обучение с scikit-learn",
-        "Анализ данных с помощью Pandas",
-        "Обработка текста в NLP"
+        "Python for beginners",
+        "Machine learning with scikit-learn",
+        "Data analysis with Pandas",
+        "Text processing in NLP"
     ]
     
     print("\n🔍 Примеры запросов:")
