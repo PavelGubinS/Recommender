@@ -8,12 +8,10 @@ from recommender import StudyRecommender
 def main():
     print("=== Study Recommender System ===")
 
-    # Инициализация системы
     recommender = StudyRecommender()
 
     print(f"Загружено {len(recommender.data)} учебных материалов")
 
-    # Примеры использования
     print("\n1. Рекомендации по запросу 'python':")
     recommendations = recommender.recommend("python", 3)
     for rec in recommendations:
