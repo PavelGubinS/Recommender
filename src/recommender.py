@@ -82,17 +82,17 @@ class StudyRecommender:
                 "tags": "time-series,forecasting"
             }
         ]
-        
+
         # Создаем DataFrame из данных
         self.data = pd.DataFrame(self.materials_data)
-        
+
         # Создаем combined_text для векторизации
         self.data['combined_text'] = (
             self.data['title'].fillna('') + ' ' +
             self.data['description'].fillna('') + ' ' +
             self.data['tags'].fillna('')
         )
-        
+
         # Инициализируем векторизатор
         self.vectorizer = TfidfVectorizer(
             max_features=1000,
@@ -100,28 +100,28 @@ class StudyRecommender:
             ngram_range=(1, 2),
             token_pattern=r'\b\w+\b'
         )
-        
+
         # Создаем TF-IDF матрицу
         if len(self.data) > 0:
             self.tfidf_matrix = self.vectorizer.fit_transform(self.data['combined_text'])
-        
+
         print(f"✅ Инициализирована система рекомендаций с {len(self.data)} материалами")
 
     def recommend(self, query, top_n=3):
         """Рекомендует материалы по запросу"""
         if len(self.data) == 0:
             return []
-            
+
         # Векторизуем запрос
         query_vector = self.vectorizer.transform([query])
-        
+
         # Вычисляем косинусное сходство
         similarities = cosine_similarity(query_vector, self.tfidf_matrix).flatten()
-        
+
         # Находим топ-N наиболее похожих материалов
         top_indices = similarities.argsort()[::-1][:top_n]
         top_indices = [i for i in top_indices if similarities[i] > 0]
-        
+
         recommendations = []
         for idx in top_indices:
             recommendations.append({
@@ -132,7 +132,7 @@ class StudyRecommender:
                 'tags': self.data.iloc[idx]['tags'],
                 'similarity': float(similarities[idx])
             })
-        
+
         return recommendations
 
     def search_by_category(self, category):
@@ -153,13 +153,13 @@ class StudyRecommender:
 # Пример использования
 if __name__ == "__main__":
     recommender = StudyRecommender()
-    
+
     # Тест рекомендаций
     print("\nРекомендации для 'python programming':")
     recommendations = recommender.recommend("python programming", 3)
     for rec in recommendations:
         print(f"  {rec['title']} - {rec['similarity']:.2f}")
-    
+
     # Тест поиска по категории
     print("\nМатериалы по категории 'ML':")
     ml_materials = recommender.search_by_category("ML")
