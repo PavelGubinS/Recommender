@@ -86,8 +86,8 @@ def print_results(results: pd.DataFrame, query: str):
         print(f"Описание: {row['description']}")
         print(f"Категория: {row['category']}")
         print(f"Теги: {row['tags']}")
-  
+
         if 'similarity' in row:
             print(f"Сходство: {row['similarity']:.3f}")
-    
+
         print("-" * 60)
