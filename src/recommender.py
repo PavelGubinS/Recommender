@@ -14,28 +14,28 @@ class StudyRecommender:
             {
                 "id": 1,
                 "title": "Introduction to Python",
-                "description": "Basic concepts of Python programming",
+                "description": "Concepts of Python programming",
                 "category": "Programming",
                 "tags": "python,basics"
             },
             {
                 "id": 2,
-                "title": "Machine Learning with scikit-learn",
-                "description": "Description of ML methods",
+                "title": "ML with scikit-learn",
+                "description": "ML methods description",
                 "category": "ML",
                 "tags": "ml,scikit"
             },
             {
                 "id": 3,
-                "title": "Text Processing in NLP",
-                "description": "Working with text data",
+                "title": "NLP Text Processing",
+                "description": "Text data processing",
                 "category": "NLP",
                 "tags": "nlp,text"
             },
             {
                 "id": 4,
-                "title": "Data Analysis with Pandas",
-                "description": "Tools for data analysis",
+                "title": "Pandas Analysis",
+                "description": "Data analysis tools",
                 "category": "Data",
                 "tags": "pandas,data-analysis"
             },
@@ -63,14 +63,14 @@ class StudyRecommender:
             {
                 "id": 8,
                 "title": "Python for Data Science",
-                "description": "Tools for data analysis",
+                "description": "Data analysis tools",
                 "category": "Programming",
                 "tags": "python,data-science"
             },
             {
                 "id": 9,
                 "title": "C++ Programming",
-                "description": "Basic concepts of C++ language",
+                "description": "C++ language concepts",
                 "category": "Programming",
                 "tags": "c++,programming"
             },
