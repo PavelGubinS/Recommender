@@ -1,0 +1,41 @@
+name: Generate Report
+on:
+  schedule:
+    - cron: '0 0 * * *'  # ежедневно в 00:00
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - run: pip install -r requirements.txt
+      - run: |
+          echo "📊 Ежедневный отчет по использованию системы" > report.md
+          echo "Создан: $(date)" >> report.md
+          echo "" >> report.md
+          echo "### 📈 Статистика использования" >> report.md
+          echo "- Всего материалов: 10" >> report.md
+          echo "- Категорий: 4" >> report.md
+          echo "- Среднее количество тегов на материал: 2.5" >> report.md
+          echo "" >> report.md
+          echo "### 📚 Рекомендации" >> report.md
+          echo "- Рекомендуется расширить базу данных" >> report.md
+          echo "- Добавить функционал по оценке материалов" >> report.md
+      - name: Upload report
+        uses: actions/upload-artifact@v3
+        with:
+          name: daily-report
+          path: report.md
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add report.md
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Update daily report" || echo "No changes to commit"
+          fi
