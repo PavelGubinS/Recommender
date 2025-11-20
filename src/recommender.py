@@ -1,5 +1,5 @@
 """
-Recommender - Логика рекомендаций
+Recommender
 """
 
 import pandas as pd
@@ -8,112 +8,159 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
 class StudyRecommender:
-    """
-    Рекомендательная система для учебных материалов
-    """
-    
-    def __init__(self, data_path):
-        """
-        Инициализация рекомендательной системы
+    def __init__(self):
+        # Данные прямо в коде (без чтения из CSV)
+        self.materials_data = [
+            {
+                "id": 1,
+                "title": "Introduction to Python",
+                "description": "Basic concepts of Python programming",
+                "category": "Programming",
+                "tags": "python,basics"
+            },
+            {
+                "id": 2,
+                "title": "Machine Learning with scikit-learn",
+                "description": "Description of ML methods",
+                "category": "ML",
+                "tags": "ml,scikit"
+            },
+            {
+                "id": 3,
+                "title": "Text Processing in NLP",
+                "description": "Working with text data",
+                "category": "NLP",
+                "tags": "nlp,text"
+            },
+            {
+                "id": 4,
+                "title": "Data Analysis with Pandas",
+                "description": "Tools for data analysis",
+                "category": "Data",
+                "tags": "pandas,data-analysis"
+            },
+            {
+                "id": 5,
+                "title": "Data Visualization",
+                "description": "Charts and diagrams",
+                "category": "Data",
+                "tags": "matplotlib,visualization"
+            },
+            {
+                "id": 6,
+                "title": "Deep Learning Basics",
+                "description": "Neural networks",
+                "category": "ML",
+                "tags": "deep-learning,neural-networks"
+            },
+            {
+                "id": 7,
+                "title": "Recommendation Systems",
+                "description": "Recommendation systems",
+                "category": "ML",
+                "tags": "recommendation-systems"
+            },
+            {
+                "id": 8,
+                "title": "Python for Data Science",
+                "description": "Tools for data analysis",
+                "category": "Programming",
+                "tags": "python,data-science"
+            },
+            {
+                "id": 9,
+                "title": "C++ Programming",
+                "description": "Basic concepts of C++ language",
+                "category": "Programming",
+                "tags": "c++,programming"
+            },
+            {
+                "id": 10,
+                "title": "Time Series Analysis",
+                "description": "Forecasting methods",
+                "category": "Data",
+                "tags": "time-series,forecasting"
+            }
+        ]
         
-        Args:
-            data_path (str): Путь к CSV файлу с материалами
-        """
-        # Читаем CSV с явным указанием кодировки
-        try:
-            self.data = pd.read_csv(data_path, encoding='utf-8')
-        except UnicodeDecodeError:
-            # Если utf-8 не работает, пробуем другие кодировки
-            try:
-                self.data = pd.read_csv(data_path, encoding='cp1251')
-            except UnicodeDecodeError:
-                self.data = pd.read_csv(data_path, encoding='latin1')
+        # Создаем DataFrame из данных
+        self.data = pd.DataFrame(self.materials_data)
         
-        # Создаем комбинированный текст для векторизации
+        # Создаем combined_text для векторизации
         self.data['combined_text'] = (
-            self.data['title'].fillna('') + ' ' + 
-            self.data['description'].fillna('') + ' ' + 
+            self.data['title'].fillna('') + ' ' +
+            self.data['description'].fillna('') + ' ' +
             self.data['tags'].fillna('')
         )
         
-        # Инициализируем векторизатор TF-IDF с параметрами для кириллицы
+        # Инициализируем векторизатор
         self.vectorizer = TfidfVectorizer(
             max_features=1000,
-            stop_words=None,  # Не используем стандартные стоп-слова
+            stop_words='english',
             ngram_range=(1, 2),
-            token_pattern=r'\b\w+\b'  # Правильная токенизация
+            token_pattern=r'\b\w+\b'
         )
         
         # Создаем TF-IDF матрицу
-        self.tfidf_matrix = self.vectorizer.fit_transform(self.data['combined_text'])
+        if len(self.data) > 0:
+            self.tfidf_matrix = self.vectorizer.fit_transform(self.data['combined_text'])
         
         print(f"✅ Инициализирована система рекомендаций с {len(self.data)} материалами")
-    
+
     def recommend(self, query, top_n=3):
-        """
-        Рекомендует материалы по запросу
-        
-        Args:
-            query (str): Поисковый запрос пользователя
-            top_n (int): Количество рекомендаций
+        """Рекомендует материалы по запросу"""
+        if len(self.data) == 0:
+            return []
             
-        Returns:
-            pandas.DataFrame: Топ N рекомендованных материалов
-        """
         # Векторизуем запрос
-        query_vec = self.vectorizer.transform([query])
+        query_vector = self.vectorizer.transform([query])
         
         # Вычисляем косинусное сходство
-        similarities = cosine_similarity(query_vec, self.tfidf_matrix).flatten()
+        similarities = cosine_similarity(query_vector, self.tfidf_matrix).flatten()
         
-        # Получаем индексы топ N материалов
+        # Находим топ-N наиболее похожих материалов
         top_indices = similarities.argsort()[::-1][:top_n]
+        top_indices = [i for i in top_indices if similarities[i] > 0]
         
-        # Фильтруем по минимальному уровню сходства (опционально)
-        min_similarity = 0.1
-        filtered_indices = [i for i in top_indices if similarities[i] >= min_similarity]
+        recommendations = []
+        for idx in top_indices:
+            recommendations.append({
+                'id': self.data.iloc[idx]['id'],
+                'title': self.data.iloc[idx]['title'],
+                'description': self.data.iloc[idx]['description'],
+                'category': self.data.iloc[idx]['category'],
+                'tags': self.data.iloc[idx]['tags'],
+                'similarity': float(similarities[idx])
+            })
         
-        # Возвращаем результаты
-        if len(filtered_indices) == 0:
-            return pd.DataFrame()
-            
-        results = self.data.iloc[filtered_indices].copy()
-        results['similarity'] = [similarities[i] for i in filtered_indices]
-        
-        # Сортируем по сходству
-        results = results.sort_values('similarity', ascending=False)
-        
-        return results[['id', 'title', 'description', 'category', 'tags', 'similarity']]
-    
-    def get_materials_info(self):
-        """
-        Возвращает информацию о всех материалах
-        
-        Returns:
-            pandas.DataFrame: Все учебные материалы
-        """
-        return self.data[['id', 'title', 'description', 'category', 'tags']]
-    
+        return recommendations
+
     def search_by_category(self, category):
-        """
-        Ищет материалы по категории
-        
-        Args:
-            category (str): Категория для поиска
-            
-        Returns:
-            pandas.DataFrame: Материалы в указанной категории
-        """
-        return self.data[self.data['category'].str.contains(category, case=False, na=False)]
-    
+        """Ищет материалы по категории"""
+        results = self.data[self.data['category'].str.contains(category, case=False, na=False)]
+        return results.to_dict('records')
+
     def search_by_tag(self, tag):
-        """
-        Ищет материалы по тегу
-        
-        Args:
-            tag (str): Тег для поиска
-            
-        Returns:
-            pandas.DataFrame: Материалы с указанным тегом
-        """
-        return self.data[self.data['tags'].str.contains(tag, case=False, na=False)]
+        """Ищет материалы по тегу"""
+        results = self.data[self.data['tags'].str.contains(tag, case=False, na=False)]
+        return results.to_dict('records')
+
+    def get_all_materials(self):
+        """Возвращает все материалы"""
+        return self.data.to_dict('records')
+
+# Пример использования
+if __name__ == "__main__":
+    recommender = StudyRecommender()
+    
+    # Тест рекомендаций
+    print("\nРекомендации для 'python programming':")
+    recommendations = recommender.recommend("python programming", 3)
+    for rec in recommendations:
+        print(f"  {rec['title']} - {rec['similarity']:.2f}")
+    
+    # Тест поиска по категории
+    print("\nМатериалы по категории 'ML':")
+    ml_materials = recommender.search_by_category("ML")
+    for material in ml_materials:
+        print(f"  {material['title']}")

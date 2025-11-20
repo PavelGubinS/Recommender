@@ -22,10 +22,6 @@ study-recommender/
 
 ├── requirements.txt
 
-├── data/
-
-│   └── materials.csv       # учебные материалы
-
 ├── src/
 
 │   ├── main.py             # основной файл запуска
