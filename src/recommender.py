@@ -19,7 +19,9 @@ class StudyRecommender:
         Args:
             data_path (str): Путь к CSV файлу с материалами
         """
-        self.data = pd.read_csv(data_path)
+        # Читаем CSV с явным указанием кодировки
+        self.data = pd.read_csv(data_path, encoding='utf-8')
+        
         # Создаем комбинированный текст для векторизации
         self.data['combined_text'] = (
             self.data['title'].fillna('') + ' ' + 
@@ -27,11 +29,12 @@ class StudyRecommender:
             self.data['tags'].fillna('')
         )
         
-        # Инициализируем векторизатор TF-IDF
+        # Инициализируем векторизатор TF-IDF с параметрами для кириллицы
         self.vectorizer = TfidfVectorizer(
             max_features=1000,
-            stop_words='english',
-            ngram_range=(1, 2)
+            stop_words=None,  # Не используем стандартные стоп-слова
+            ngram_range=(1, 2),
+            token_pattern=r'\b\w+\b'  # Правильная токенизация
         )
         
         # Создаем TF-IDF матрицу

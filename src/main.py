@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Study Material Recommender - Главный файл проекта
+Recommender - Главный файл проекта
 """
 
 import sys
@@ -14,13 +14,17 @@ def main():
     print("🎓 Добро пожаловать в Study Material Recommender!")
     print("=" * 50)
     
-    # Создаем рекомендательную систему
-    recommender = StudyRecommender("data/materials.csv")
+    try:
+        # Создаем рекомендательную систему
+        recommender = StudyRecommender("data/materials.csv")
+    except Exception as e:
+        print(f"❌ Ошибка при инициализации системы: {e}")
+        return
     
     # Примеры запросов для демонстрации
     examples = [
         "Python для начинающих",
-        "Машинное обучение с использованием scikit-learn",
+        "Машинное обучение с scikit-learn",
         "Анализ данных с помощью Pandas",
         "Обработка текста в NLP"
     ]
@@ -32,29 +36,38 @@ def main():
     print("\nВведите свой запрос (или 'quit' для выхода):")
     
     while True:
-        user_input = input("\n> ").strip()
-        
-        if user_input.lower() in ['quit', 'выход', 'exit']:
-            print("👋 До свидания!")
+        try:
+            user_input = input("\n> ").strip()
+            
+            if user_input.lower() in ['quit', 'выход', 'exit']:
+                print("👋 До свидания!")
+                break
+                
+            if not user_input:
+                print("Пожалуйста, введите запрос")
+                continue
+                
+            print(f"\n🔍 Поиск материалов по запросу: '{user_input}'")
+            results = recommender.recommend(user_input, top_n=3)
+            
+            if len(results) == 0:
+                print("❌ Не удалось найти подходящие материалы")
+            else:
+                print("\n📚 Рекомендуемые материалы:")
+                for index, row in results.iterrows():
+                    print(f"   • {row['title']}")
+                    print(f"     Описание: {row['description']}")
+                    print(f"     Категория: {row['category']}")
+                    print(f"     Теги: {row['tags']}")
+                    if 'similarity' in row:
+                        print(f"     Сходство: {row['similarity']:.3f}")
+                    print()
+                    
+        except KeyboardInterrupt:
+            print("\n\n👋 До свидания!")
             break
-            
-        if not user_input:
-            print("Пожалуйста, введите запрос")
-            continue
-            
-        print(f"\n🔍 Поиск материалов по запросу: '{user_input}'")
-        results = recommender.recommend(user_input, top_n=3)
-        
-        if len(results) == 0:
-            print("❌ Не удалось найти подходящие материалы")
-        else:
-            print("\n📚 Рекомендуемые материалы:")
-            for index, row in results.iterrows():
-                print(f"   • {row['title']}")
-                print(f"     Описание: {row['description']}")
-                print(f"     Категория: {row['category']}")
-                print(f"     Теги: {row['tags']}")
-                print()
+        except Exception as e:
+            print(f"❌ Ошибка при обработке запроса: {e}")
 
 if __name__ == "__main__":
     main()
