@@ -1,11 +1,11 @@
-id,title,description,category,tags
-"1,""Introduction to Python"",""Basic concepts of Python programming"",Programming,""python,basics"""
-"2,""Machine Learning with scikit-learn"",""Description of ML methods"",ML,""ml,scikit"""
-"3,""Text Processing in NLP"",""Working with text data"",NLP,""nlp,text"""
-"4,""Data Analysis with Pandas"",""Tools for data analysis"",Data,""pandas,data-analysis"""
-"5,""Data Visualization"",""Charts and diagrams"",Data,""matplotlib,visualization"""
-"6,""Deep Learning Basics"",""Neural networks"",ML,""deep-learning,neural-networks"""
-"7,""Recommendation Systems"",""Recommendation systems"",ML,""recommendation-systems"""
-"8,""Python for Data Science"",""Tools for data analysis"",Programming,""python,data-science"""
-"9,""C++ Programming"",""Basic concepts of C++ language"",Programming,""c++,programming"""
-"10,""Time Series Analysis"",""Forecasting methods"",Data,""time-series,forecasting"""
+id;title;description;category;tags
+1;Introduction to Python;Basic concepts of Python programming;Programming;python,basics
+2;Machine Learning with scikit-learn;Description of ML methods;ML;ml,scikit
+3;Text Processing in NLP;Working with text data;NLP;nlp,text
+4;Data Analysis with Pandas;Tools for data analysis;Data;pandas,data-analysis
+5;Data Visualization;Charts and diagrams;Data;matplotlib,visualization
+6;Deep Learning Basics;Neural networks;ML;deep-learning,neural-networks
+7;Recommendation Systems;Recommendation systems;ML;recommendation-systems
+8;Python for Data Science;Tools for data analysis;Programming;python,data-science
+9;C++ Programming;Basic concepts of C++ language;Programming;c++,programming
+10;Time Series Analysis;Forecasting methods;Data;time-series,forecasting
