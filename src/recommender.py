@@ -134,13 +134,15 @@ class StudyRecommender:
 
     def search_by_category(self, category):
         """Поиск материалов по категории"""
-        results = self.data[self.data['category'].str.contains(category, case=False, na=False)]
-        return results.to_dict('records')
+        category_mask = self.data['category'].str.contains(
+            category, case=False, na=False)
+        return self.data[category_mask].to_dict('records')
 
     def search_by_tag(self, tag):
         """Поиск материалов по тегу"""
-        results = self.data[self.data['tags'].str.contains(tag, case=False, na=False)]
-        return results.to_dict('records')
+        tags_mask = self.data['tags'].str.contains(
+            tag, case=False, na=False)
+        return self.data[tags_mask].to_dict('records')
 
     def get_all_materials(self):
         """Все материалы"""
