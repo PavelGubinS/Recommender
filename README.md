@@ -14,7 +14,9 @@ study-recommender/
 
 │       └── tests.yml
 
-│       └── report-gen.yml       
+│       └── report-gen.yml 
+
+│       └── data-update.yml     
 
 ├── README.md
 

@@ -1,0 +1,27 @@
+# В .github/workflows/data-update.yml
+name: Update Data
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # каждую неделю в понедельник в 2:00
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - run: pip install -r requirements.txt
+      - run: python scripts/update_data.py
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/materials.csv
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Update materials data" || echo "No changes to commit"
+          fi
+      - name: Push changes
+        run: git push origin main
