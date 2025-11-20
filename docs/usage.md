@@ -1,5 +1,8 @@
-from src.recommender import StudyRecommender
+# Study Material Recommender - Руководство по использованию
 
-recommender = StudyRecommender("data/materials.csv")
-results = recommender.recommend("Python for beginners")
-print(results)
+## Описание
+Study Material Recommender - это система рекомендаций учебных материалов для студентов, которая помогает находить подходящие ресурсы на основе интересов и запросов.
+
+## Установка зависимостей
+```bash
+pip install -r requirements.txt
