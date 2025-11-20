@@ -14,28 +14,28 @@ class StudyRecommender:
             {
                 "id": 1,
                 "title": "Introduction to Python",
-                "description": "Concepts of Python programming",
+                "description": "Python concepts",
                 "category": "Programming",
                 "tags": "python,basics"
             },
             {
                 "id": 2,
                 "title": "ML with scikit-learn",
-                "description": "ML methods description",
+                "description": "ML methods",
                 "category": "ML",
                 "tags": "ml,scikit"
             },
             {
                 "id": 3,
                 "title": "NLP Text Processing",
-                "description": "Text data processing",
+                "description": "Text processing",
                 "category": "NLP",
                 "tags": "nlp,text"
             },
             {
                 "id": 4,
                 "title": "Pandas Analysis",
-                "description": "Data analysis tools",
+                "description": "Data tools",
                 "category": "Data",
                 "tags": "pandas,data-analysis"
             },
@@ -63,14 +63,14 @@ class StudyRecommender:
             {
                 "id": 8,
                 "title": "Python for Data Science",
-                "description": "Data analysis tools",
+                "description": "Data tools",
                 "category": "Programming",
                 "tags": "python,data-science"
             },
             {
                 "id": 9,
                 "title": "C++ Programming",
-                "description": "C++ language concepts",
+                "description": "C++ concepts",
                 "category": "Programming",
                 "tags": "c++,programming"
             },
@@ -83,13 +83,13 @@ class StudyRecommender:
             }
         ]
 
-        # Создаем DataFrame из данных
+        # Создаем DataFrame
         self.data = pd.DataFrame(self.materials_data)
 
         # Создаем combined_text для векторизации
         self.data['combined_text'] = self._create_combined_text()
 
-        # Инициализируем векторизатор
+        # Инициализация TF-IDF vectorizer
         self.vectorizer = TfidfVectorizer(
             max_features=1000,
             stop_words='english',
@@ -101,10 +101,10 @@ class StudyRecommender:
         if len(self.data) > 0:
             self.tfidf_matrix = self.vectorizer.fit_transform(self.data['combined_text'])
 
-        print(f"✅ Инициализирована система рекомендаций с {len(self.data)} материалами")
+        print(f"✅ Инициализированен с {len(self.data)} материалами")
 
     def _create_combined_text(self):
-        """Создает объединенный текст для векторизации"""
+        """Объединяет поля для векторизации"""
         return (self.data['title'].fillna('') + ' ' +
                 self.data['description'].fillna('') + ' ' +
                 self.data['tags'].fillna(''))
@@ -114,41 +114,36 @@ class StudyRecommender:
         if len(self.data) == 0:
             return []
 
-        # Векторизуем запрос
         query_vector = self.vectorizer.transform([query])
+        sims = cosine_similarity(query_vector, self.tfidf_matrix).flatten()
 
-        # Вычисляем косинусное сходство
-        similarities = cosine_similarity(query_vector, self.tfidf_matrix).flatten()
+        top_idxs = sims.argsort()[::-1][:top_n]
+        top_idxs = [i for i in top_idxs if sims[i] > 0]
 
-        # Находим топ-N наиболее похожих материалов
-        top_indices = similarities.argsort()[::-1][:top_n]
-        top_indices = [i for i in top_indices if similarities[i] > 0]
-
-        recommendations = []
-        for idx in top_indices:
-            recommendations.append({
-                'id': self.data.iloc[idx]['id'],
-                'title': self.data.iloc[idx]['title'],
-                'description': self.data.iloc[idx]['description'],
-                'category': self.data.iloc[idx]['category'],
-                'tags': self.data.iloc[idx]['tags'],
-                'similarity': float(similarities[idx])
+        res = []
+        for i in top_idxs:
+            res.append({
+                'id': self.data.iloc[i]['id'],
+                'title': self.data.iloc[i]['title'],
+                'description': self.data.iloc[i]['description'],
+                'category': self.data.iloc[i]['category'],
+                'tags': self.data.iloc[i]['tags'],
+                'similarity': float(sims[i])
             })
-
-        return recommendations
+        return res
 
     def search_by_category(self, category):
-        """Ищет материалы по категории"""
+        """Поиск материалов по категории"""
         results = self.data[self.data['category'].str.contains(category, case=False, na=False)]
         return results.to_dict('records')
 
     def search_by_tag(self, tag):
-        """Ищет материалы по тегу"""
+        """Поиск материалов по тегу"""
         results = self.data[self.data['tags'].str.contains(tag, case=False, na=False)]
         return results.to_dict('records')
 
     def get_all_materials(self):
-        """Возвращает все материалы"""
+        """Все материалы"""
         return self.data.to_dict('records')
 
 
@@ -157,13 +152,13 @@ if __name__ == "__main__":
     recommender = StudyRecommender()
 
     # Тест рекомендаций
-    print("\nРекомендации для 'python programming':")
-    recommendations = recommender.recommend("python programming", 3)
-    for rec in recommendations:
+    print("\nРекомендации по запросу 'python prog':")
+    recs = recommender.recommend("python programming", 3)
+    for rec in recs:
         print(f"  {rec['title']} - {rec['similarity']:.2f}")
 
-    # Тест поиска по категории
-    print("\nМатериалы по категории 'ML':")
-    ml_materials = recommender.search_by_category("ML")
-    for material in ml_materials:
-        print(f"  {material['title']}")
+    # Поиск по категории
+    print("\nМатериалы по 'ML':")
+    ml_list = recommender.search_by_category("ML")
+    for m in ml_list:
+        print(f"  {m['title']}")
