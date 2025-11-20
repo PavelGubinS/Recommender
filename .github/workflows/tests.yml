@@ -10,8 +10,6 @@ jobs:
         with:
           python-version: '3.9'
       - run: pip install -r requirements.txt
-      - run: pytest tests/
+      - run: python -m pytest tests/ -v
       - run: flake8 src/
       - run: black --check src/
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
