@@ -14,12 +14,6 @@ pip install -r requirements.txt
 ▶️ Запуск
 Интерактивный режим:
 python src/main.py
-Программное использование:
-from src.recommender import StudyRecommender
-
-recommender = StudyRecommender("data/materials.csv")
-results = recommender.recommend("Python basics", top_n=3)
-print(results)
 
 🧪 Тестирование
 pytest tests/
